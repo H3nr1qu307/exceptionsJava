@@ -31,18 +31,13 @@ public class Program {
             System.out.print("Data de checkin: ");
             in = sdf.parse(sc.next());
             System.out.print("Data de checkout: ");
-            out = sdf.parse(sc.next());
+            out = sdf.parse(sc.next()); 
+           
+            String error = reserva.updateDates(in, out);
             
-            Date now = new Date();
-            
-            if(in.before(now) || out.before(now)) {
-                System.out.println("Erro na reserva: as datas nao podem ser anteriores a data atual");
-            }
-            else if(!out.after(in)) {
-                System.out.println("Erro: a data de checkout nao pode ser anterior a data de checkin");
-            }
-            else {
-                reserva.updateDates(in, out);
+            if(error != null) {
+                System.out.println("Erro na reserva: " + error);
+            } else {
                 System.out.println(reserva);
             }
         }
