@@ -3,6 +3,7 @@ package model.entities;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import model.exceptions.DomainException;
 
 public class Reservations {
     private Integer numQuarto;
@@ -14,6 +15,10 @@ public class Reservations {
     public Reservations() {}
 
     public Reservations(Integer numQuarto, Date checkin, Date checkout) {
+        if(!checkout.after(checkin)) {
+            throw new DomainException("a data de checkout nao pode ser anterior a data de checkin");
+        }
+        
         this.numQuarto = numQuarto;
         this.checkin = checkin;
         this.checkout = checkout;
@@ -40,20 +45,18 @@ public class Reservations {
         return TimeUnit.DAYS.convert(dif, TimeUnit.MILLISECONDS);
     }
     
-    public String updateDates(Date checkin, Date checkout) {
+    public void updateDates(Date checkin, Date checkout) {
         Date now = new Date();
 
          if(checkin.before(now) || checkout.before(now)) {
-            return "as datas nao podem ser anteriores a data atual";
+            throw new DomainException("as datas nao podem ser anteriores a data atual");
         }
         if(!checkout.after(checkin)) {
-            return "a data de checkout nao pode ser anterior a data de checkin";
+            throw new DomainException("a data de checkout nao pode ser anterior a data de checkin");
         }
         
         this.checkin = checkin;
-        this.checkout = checkout;
-        
-        return null;
+        this.checkout = checkout;        
     }
 
     @Override
